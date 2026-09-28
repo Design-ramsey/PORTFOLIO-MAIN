@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <script>
+        (function () {
+            document.documentElement.classList.add("js");
+            if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+                document.documentElement.classList.add("reduce-motion");
+            }
+        })();
+    </script>
+
+    <title>Contact — Asiedu Ramsey Kwesi</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --page-padding: 5vw;
+            --grid-gap: 2vw;
+            --columns: 12;
+            --ink: #000;
+            --ink-soft: #3a3a3a;
+            --ink-muted: #5c5c5c;
+            --line: #111;
+            --white: #fff;
+            --accent: rgb(65, 62, 201);
+            --nav-height: 3.5rem;
+            --footer-height: 3.5rem;
+            --ease: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            scrollbar-width: none;
+        }
+        *::-webkit-scrollbar { display: none; }
+
+        html { width: 100%; min-height: 100%; }
+        body {
+            width: 100%;
+            min-height: 100%;
+            background: #f5f5f5;
+            color: var(--ink-soft);
+            font-family: 'Google sans', Arial, Helvetica, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            text-rendering: optimizeLegibility;
+            overflow-x: hidden;
+        }
+
+        button, a { -webkit-tap-highlight-color: transparent; }
+
+        /* ---------- PAGE WIPE ---------- */
+        .page-wipe {
+            position: fixed; inset: 0;
+            background-color: #000;
+            z-index: 9999;
+            pointer-events: none;
+            transform: translateY(-100%);
+            will-change: transform;
+        }
+        html.js .page-wipe { transform: translateY(0); }
+        html.reduce-motion .page-wipe { display: none; }
+
+        /* ---------- NAVIGATION ---------- */
+        .navigation {
+            position: fixed;
+            inset: 0 0 auto 0;
+            z-index: 100;
+            width: 100%;
+            height: var(--nav-height);
+            padding-inline: var(--page-padding);
+            display: grid;
+            grid-template-columns: repeat(var(--columns), minmax(0, 1fr));
+            column-gap: var(--grid-gap);
+            align-items: center;
+        }
+        .nav-year { grid-column: 1 / 3; min-width: 0; }
+        .nav-year p { font-size: 0.76rem; font-weight: 600; white-space: nowrap; margin: 0; color: var(--ink); }
+        .nav-main { grid-column: 5 / 9; display: flex; justify-content: center; min-width: 0; }
+        .nav-social { grid-column: 10 / 13; display: flex; justify-content: flex-end; min-width: 0; }
+
+        .navigation ul { list-style: none; }
+        .navigation .list { display: flex; align-items: center; justify-content: center; gap: 2rem; }
+        .navigation .socials { display: flex; align-items: center; justify-content: flex-end; gap: 1rem; }
+
+        .navigation a {
+            position: relative;
+            display: inline-block;
+            color: var(--ink);
+            font-size: 0.86rem;
+            font-weight: 500;
+            line-height: 1;
+            text-decoration: none;
+            vertical-align: bottom;
+            transition: color 0.4s ease, opacity 0.3s ease;
+        }
+        .navigation .socials a { font-size: 0.7rem; font-weight: 500; }
+
+        /* ---- ACTIVE PAGE + 0.8 OPACITY ON INACTIVE ---- */
+        .navigation .list a { opacity: 0.6; }
+        .navigation .list a:hover,
+        .navigation .list a:focus-visible,
+        .navigation .list a.is-active { opacity: 1; }
+        .navigation .list a.is-active { font-weight: 800; }
+
+        .navigation a::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -5px;
+            width: 0;
+            height: 1px;
+            background-color: var(--ink);
+            transform-origin: left center;
+            transition: width 0.4s var(--ease);
+        }
+        .navigation .list a.is-active::after {
+            width: 100%;
+            animation: navUnderline 0.9s var(--ease) 1.35s both;
+        }
+        @keyframes navUnderline {
+            from { transform: scaleX(0); }
+            to   { transform: scaleX(1); }
+        }
+        .navigation a:hover::after,
+        .navigation a:focus-visible::after { width: 100%; }
+
+        /* ---------- STABLE TEXT SCRAMBLE ---------- */
+        .scramble-base {
+            position: relative;
+            z-index: 1;
+            display: inline-block;
+            opacity: 1;
+            transition: opacity 0.16s ease;
+        }
+        .scramble-layer {
+            position: absolute;
+            inset: 0;
+            z-index: 2;
+            display: block;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            user-select: none;
+            overflow: hidden;
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
+            font: inherit;
+            letter-spacing: inherit;
+            line-height: inherit;
+            text-transform: inherit;
+            color: inherit;
+            opacity: 0;
+            transition: opacity 0.16s ease;
+            will-change: opacity;
+        }
+        .is-scrambling .scramble-base { opacity: 0; }
+        .is-scrambling .scramble-layer { opacity: 1; }
+
+        /* ---------- MAIN ---------- */
+        .contact-page {
+            width: 100%;
+            min-height: 100vh;
+            padding: var(--nav-height) 0.5rem var(--footer-height);
+            display: grid;
+            grid-template-columns: repeat(var(--columns), minmax(0, 1fr));
+            column-gap: var(--grid-gap);
+        }
+
+        .hero {
+            grid-column: 1 / -1;
+            min-height: calc(100vh - var(--nav-height) - var(--footer-height));
+            display: grid;
+            grid-template-rows: 1fr auto;
+            padding: clamp(3rem, 8vh, 7rem) 0 clamp(2.5rem, 7vh, 6rem);
+        }
+
+        .hero-title {
+            align-self: center;
+            width: 100%;
+            max-width: 1250px;
+            color: var(--ink);
+            font-size: clamp(3.2rem, 9vw, 7.8rem);
+            line-height: 1;
+            font-weight: 400;
+            letter-spacing: -0.048em;
+            text-transform: uppercase;
+            text-wrap: balance;
+            perspective: 400px;
+        }
+
+        .reveal-word {
+            display: inline-block;
+            overflow: hidden;
+            vertical-align: bottom;
+            padding-top: 0.12em;
+            padding-bottom: 0.16em;
+            margin-top: -0.12em;
+            margin-bottom: -0.16em;
+        }
+        .reveal-word-inner { 
+            display: inline-block; 
+            will-change: transform; 
+            transform-origin: bottom left; 
+        }
+
+        .hero-title .line-break {
+            display: block;
+            width: 100%;
+            height: 0;
+        }
+
+        /* ---------- DIRECTORY ---------- */
+        .contact-directory {
+            width: 100%;
+            padding-top: 1.35rem;
+            border-top: 1px solid var(--line);
+            display: grid;
+            grid-template-columns: repeat(var(--columns), minmax(0, 1fr));
+            column-gap: var(--grid-gap);
+            align-items: start;
+        }
+        .directory-label { grid-column: 1 / 4; min-width: 0; padding-right: 1rem; }
+        .directory-label span {
+            display: inline-block;
+            font-size: 0.72rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            line-height: 1.2;
+            text-transform: uppercase;
+            color: var(--ink);
+        }
+
+        .contact-details {
+            grid-column: 5 / -1;
+            min-width: 0;
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            column-gap: clamp(2rem, 5vw, 6rem);
+            row-gap: clamp(2rem, 5vh, 4rem);
+        }
+
+        .contact-item {
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            will-change: transform, opacity;
+        }
+
+        .detail-label {
+            display: inline-block;
+            margin-bottom: 0.6rem;
+            color: var(--ink-muted);
+            font-size: 0.68rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            line-height: 1.25;
+            text-transform: uppercase;
+        }
+
+        .contact-item a {
+            position: relative;
+            display: inline-block;
+            max-width: 100%;
+            color: var(--ink);
+            font-family: "Lora", Georgia, serif;
+            font-size: clamp(1.05rem, 1.45vw, 1.65rem);
+            line-height: 1.35;
+            text-decoration: none;
+            overflow-wrap: anywhere;
+            vertical-align: bottom;
+        }
+        .contact-item a::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: -4px;
+            width: 0;
+            height: 1px;
+            background: var(--ink);
+            transition: width 0.4s var(--ease);
+        }
+        .contact-item a:hover::after,
+        .contact-item a:focus-visible::after { width: 100%; }
+
+        .contact-item.status {
+            flex-direction: row;
+            align-items: center;
+            gap: 0.7rem;
+            align-self: end;
+        }
+        .contact-item.status .detail-label { margin: 0; }
+
+        .status-dot {
+            position: relative;
+            flex: 0 0 auto;
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--ink);
+        }
+        .status-dot::after {
+            content: "";
+            position: absolute;
+            inset: -4px;
+            border: 1px solid rgba(0, 0, 0, 0.3);
+            border-radius: 50%;
+        }
+
+        /* ---------- FOOTER ---------- */
+        .footer {
+            position: fixed;
+            inset: auto 0 0 0;
+            z-index: 100;
+            width: 100%;
+            height: var(--footer-height);
+            padding-inline: var(--page-padding);
+            display: grid;
+            grid-template-columns: repeat(var(--columns), minmax(0, 1fr));
+            column-gap: var(--grid-gap);
+            align-items: center;
+        }
+        .footer-button { grid-column: 1 / 3; }
+        .footer-copy { grid-column: 10 / -1; display: flex; justify-content: flex-end; }
+        .footer-copy p { font-size: 0.68rem; font-weight: 500; white-space: nowrap; margin: 0; color: var(--ink-soft); }
+
+        .footer_socials { display: none; list-style: none; gap: 0.6rem; }
+        .footer_socials a {
+            position: relative;
+            display: inline-block;
+            color: var(--ink);
+            text-decoration: none;
+            font-size: 0.68rem;
+            vertical-align: bottom;
+        }
+        .footer_socials a::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: -3px;
+            width: 0;
+            height: 1px;
+            background: var(--ink);
+            transition: width 0.4s var(--ease);
+        }
+        .footer_socials a:hover::after { width: 100%; }
+
+        /* ---------- CONTRACT BUTTON ---------- */
+        .work_button {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border: 0;
+            border-radius: 100px;
+            background-color: #000;
+            color: #fff;
+            font-family: inherit;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+            cursor: pointer;
+            overflow: hidden;
+            isolation: isolate;
+            will-change: transform;
+            transition: color 0.4s ease;
+        }
+        .work_button::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            z-index: -1;
+            background-color: var(--accent);
+            transform: translateY(101%);
+            transition: transform 0.55s var(--ease);
+        }
+        .work_button:hover::before,
+        .work_button:focus-visible::before { transform: translateY(0); }
+        .work_button__arrow {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            transition: transform 0.45s var(--ease);
+        }
+        .work_button:hover .work_button__arrow,
+        .work_button:focus-visible .work_button__arrow { transform: translate(2px, -2px); }
+
+        /* ---------- BACK TO TOP ---------- */
+        .to-top {
+            position: fixed;
+            right: 5vw;
+            bottom: 4.6rem;
+            z-index: 150;
+            width: 2.6rem;
+            height: 2.6rem;
+            display: grid;
+            place-items: center;
+            padding: 0;
+            border: 1px solid var(--ink);
+            border-radius: 50%;
+            background: #fff;
+            color: var(--ink);
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(12px);
+            transition:
+                opacity 0.45s var(--ease),
+                transform 0.45s var(--ease),
+                background-color 0.35s ease,
+                color 0.35s ease,
+                visibility 0.45s;
+        }
+        .to-top.is-visible { opacity: 1; visibility: visible; transform: translateY(0); }
+        .to-top:hover,
+        .to-top:focus-visible { background: #000; color: #fff; }
+        .to-top svg { width: 12px; height: 12px; display: block; }
+
+        /* ---------- TABLET ---------- */
+        @media (min-width: 768px) and (max-width: 1100px) {
+            :root { --page-padding: 3rem; --grid-gap: 1.4rem; }
+
+            .navigation, .footer, .contact-page, .contact-directory {
+                grid-template-columns: repeat(8, minmax(0, 1fr));
+            }
+            .nav-year { grid-column: 1 / 3; }
+            .nav-main { grid-column: 3 / 7; }
+            .nav-social { grid-column: 7 / 9; }
+            .navigation .list { gap: 1.4rem; }
+            .navigation .socials { gap: 0.75rem; }
+            .navigation a { font-size: 0.8rem; }
+            .navigation .socials a { font-size: 0.68rem; }
+            .hero { grid-column: 1 / -1; padding: 4rem 0; }
+            .hero-title { max-width: 100%; font-size: clamp(3.2rem, 8vw, 5.8rem); }
+            .directory-label { grid-column: 1 / 3; }
+            .contact-details { grid-column: 3 / -1; column-gap: 2rem; row-gap: 2.5rem; }
+            .contact-item a { font-size: clamp(1rem, 1.8vw, 1.45rem); }
+            .footer-button { grid-column: 1 / 3; }
+            .footer-copy { grid-column: 7 / -1; }
+        }
+
+        /* ---------- MOBILE ---------- */
+        @media (max-width: 767px) {
+            :root { --page-padding: 1rem; --grid-gap: 1rem; }
+
+            .navigation {
+                display: flex;
+                justify-content: flex-end;
+                align-items: center;
+                gap: 1rem;
+                padding-inline: var(--page-padding);
+                height: var(--nav-height);
+            }
+            .nav-year { margin-right: auto; }
+            .nav-year p { font-size: 0.68rem; }
+            .nav-main { margin-left: auto; width: auto; }
+            .nav-social { display: none; }
+            .navigation .list { gap: 1rem; }
+            .navigation a { font-size: 0.76rem; }
+
+            .contact-page { display: block; min-height: 100vh; padding: var(--nav-height) 0.5rem var(--footer-height); }
+
+            .hero {
+                min-height: calc(100vh - var(--nav-height) - var(--footer-height));
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                padding: clamp(2.5rem, 8vh, 4.5rem) 0 clamp(2rem, 6vh, 3.5rem);
+            }
+            .hero-title {
+                width: 100%; max-width: none;
+                font-size: clamp(2.55rem, 11.5vw, 4.5rem);
+                line-height: 1.02;
+                letter-spacing: -0.045em;
+            }
+
+            .contact-directory { display: block; width: 100%; margin-top: 3rem; padding-top: 1rem; }
+            .directory-label { width: 100%; margin-bottom: 2rem; padding: 0; }
+            .directory-label span { font-size: 0.68rem; }
+            .contact-details { display: grid; grid-template-columns: 1fr; gap: 2rem; width: 100%; }
+            .detail-label { margin-bottom: 0.5rem; font-size: 0.64rem; }
+            .contact-item a { max-width: 100%; font-size: clamp(1.05rem, 5.2vw, 1.35rem); line-height: 1.35; }
+            .contact-item.status { gap: 0.65rem; margin-top: 0.2rem; }
+            .contact-item.status .detail-label { line-height: 1.3; }
+
+            .footer {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding-inline: 0.85rem;
+                height: var(--footer-height);
+                gap: 0.5rem;
+            }
+            .footer-button { flex: 0 0 auto; }
+            .work_button { width: auto; padding: 0.4rem 0.75rem; font-size: 0.65rem; gap: 0.35rem; }
+            .work_button__arrow { width: 8px; height: 8px; }
+            .footer_socials { display: inline-flex; flex: 1 1 auto; justify-content: center; gap: 0.5rem; }
+            .footer_socials a { font-size: 0.6rem; }
+            .footer-copy { flex: 0 0 auto; }
+            .footer-copy p { font-size: 0.55rem; }
+
+            .to-top { right: 0.85rem; bottom: 4.3rem; width: 2.3rem; height: 2.3rem; }
+            .to-top svg { width: 11px; height: 11px; }
+        }
+
+        @media (max-width: 380px) {
+            :root { --page-padding: 0.85rem; }
+            .navigation .list { gap: 0.75rem; }
+            .navigation a { font-size: 0.7rem; }
+            .hero-title { font-size: 11.2vw; }
+            .contact-directory { margin-top: 3rem; }
+            .contact-details { gap: 1.7rem; }
+            .footer_socials a { font-size: 0.56rem; }
+            .footer-copy p { font-size: 0.5rem; }
+        }
+
+        @media (hover: none) {
+            .scramble-layer { display: none !important; }
+            .scramble-base { opacity: 1 !important; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+            .navigation .list a.is-active::after { animation: none; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="page-wipe" aria-hidden="true"></div>
+
+    <!-- Navigation -->
+    <header class="navigation">
+        <div class="nav-year"><p><strong>2024 - Present</strong></p></div>
+        <nav class="nav-main" aria-label="Primary Navigation">
+            <ul class="list">
+                <li><a href="index.html">CATALOG</a></li>
+                <li><a href="contact.html" class="is-active" aria-current="page">CONTACT</a></li>
+                <li><a href="about.html">PROFILE</a></li>
+            </ul>
+        </nav>
+        <div class="nav-social">
+            <ul class="socials">
+                <li><a href="https://www.linkedin.com/in/ramsey-asiedu-a62773312" target="_blank" rel="noopener">LinkedIn</a></li>
+                <li><a href="https://www.behance.net/ramseyasiedu" target="_blank" rel="noopener">Behance</a></li>
+                <li><a href="mailto:ramseyasiedu191@gmail.com">Mail</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <!-- Main -->
+    <main class="contact-page">
+        <section class="hero">
+            <h1 class="hero-title" id="heroTitle"
+                data-value="GET IN TOUCH FOR PROJECT INQUIRIES.|AVAILABLE FOR FREELANCE.">
+                GET IN TOUCH FOR PROJECT INQUIRIES. AVAILABLE FOR FREELANCE.
+            </h1>
+
+            <div class="contact-directory">
+                <div class="directory-label">
+                    <span>Contact Directory</span>
+                </div>
+
+                <div class="contact-details">
+                    <div class="contact-item">
+                        <span class="detail-label">Email</span>
+                        <a href="mailto:ramseyasiedu191@gmail.com">ramseyasiedu191@gmail.com</a>
+                    </div>
+
+                    <div class="contact-item">
+                        <span class="detail-label">Telephone / WhatsApp</span>
+                        <a href="tel:+233530998476">+233 530 998 476</a>
+                    </div>
+
+                    <div class="contact-item">
+                        <span class="detail-label">LinkedIn</span>
+                        <a href="https://www.linkedin.com/in/ramsey-asiedu-a62773312"
+                           target="_blank" rel="noopener">ramsey-asiedu-a62773312</a>
+                    </div>
+
+                    <div class="contact-item">
+                        <span class="detail-label">Behance</span>
+                        <a href="https://www.behance.net/ramseyasiedu"
+                           target="_blank" rel="noopener">behance.net/ramseyasiedu</a>
+                    </div>
+
+                    <div class="contact-item status">
+                        <span class="status-dot" aria-hidden="true"></span>
+                        <span class="detail-label">Available From September 2026</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-button">
+            <button type="button" class="work_button"
+                    onclick="window.location.href='mailto:ramseyasiedu191@gmail.com'">
+                <span>Contract?</span>
+                <svg class="work_button__arrow" viewBox="0 0 12 12" aria-hidden="true">
+                    <path d="M1 11L11 1M11 1H3M11 1V9" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
+        </div>
+        <ul class="socials footer_socials">
+            <li><a href="https://www.linkedin.com/in/ramsey-asiedu-a62773312" target="_blank" rel="noopener">LinkedIn</a></li>
+            <li><a href="https://www.behance.net/ramseyasiedu" target="_blank" rel="noopener">Behance</a></li>
+            <li><a href="mailto:ramseyasiedu191@gmail.com">Mail</a></li>
+        </ul>
+        <div class="footer-copy"><p>&copy; 2026 Ramsey Asiedu</p></div>
+    </footer>
+
+    <button class="to-top" type="button" aria-label="Back to top">
+        <svg viewBox="0 0 12 12" aria-hidden="true">
+            <path d="M6 10V2M6 2L2 6M6 2l4 4" stroke="currentColor" stroke-width="1.5" fill="none"
+                  stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+    </button>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script src="https://unpkg.com/lenis@1.3.25/dist/lenis.min.js"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+            const supportsHover = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+            const isDesktopOrTablet = window.matchMedia("(min-width: 768px)").matches;
+            const hasGSAP = typeof window.gsap !== "undefined";
+            const hasScrollTrigger = hasGSAP && typeof window.ScrollTrigger !== "undefined";
+            const motionOK = hasGSAP && !prefersReducedMotion;
+
+            if (!hasGSAP) document.documentElement.classList.remove("js");
+            if (hasScrollTrigger) gsap.registerPlugin(ScrollTrigger);
+
+            /* ---------- LENIS ---------- */
+            if (typeof Lenis !== "undefined" && isDesktopOrTablet && !prefersReducedMotion) {
+                const lenis = new Lenis({ autoRaf: false, anchors: true, smoothWheel: true, syncTouch: false });
+                window.lenis = lenis;
+                if (hasGSAP) {
+                    lenis.on("scroll", () => { if (hasScrollTrigger) ScrollTrigger.update(); });
+                    gsap.ticker.add(time => lenis.raf(time * 1000));
+                    gsap.ticker.lagSmoothing(0);
+                }
+            }
+
+            /* ---------- HERO SPLIT ---------- */
+            const heroTitle = document.getElementById("heroTitle");
+            let heroWords = [];
+            function splitHeroTitle() {
+                if (!heroTitle) return;
+                const raw = (heroTitle.dataset.value || heroTitle.textContent).replace(/\s+/g, " ").trim();
+                if (!raw) return;
+                heroTitle.setAttribute("aria-label", raw.replace(/\s*\|\s*/g, " "));
+                heroTitle.textContent = "";
+                const frag = document.createDocumentFragment();
+                const lines = raw.split(/\s*\|\s*/);
+                lines.forEach((lineText, lineIdx) => {
+                    const words = lineText.split(" ");
+                    words.forEach((word, i) => {
+                        if (i > 0) frag.appendChild(document.createTextNode(" "));
+                        const mask = document.createElement("span");
+                        mask.className = "reveal-word";
+                        mask.setAttribute("aria-hidden", "true");
+                        const inner = document.createElement("span");
+                        inner.className = "reveal-word-inner";
+                        inner.textContent = word;
+                        mask.appendChild(inner);
+                        frag.appendChild(mask);
+                    });
+                    if (lineIdx < lines.length - 1) {
+                        const br = document.createElement("span");
+                        br.className = "line-break";
+                        br.setAttribute("aria-hidden", "true");
+                        frag.appendChild(br);
+                    }
+                });
+                heroTitle.appendChild(frag);
+                heroWords = heroTitle.querySelectorAll(".reveal-word-inner");
+            }
+            if (motionOK) {
+                splitHeroTitle();
+                if (heroWords.length) gsap.set(heroWords, { yPercent: 140, skewY: 5, rotationZ: 2 });
+            }
+
+            /* ---------- PAGE WIPE ---------- */
+            const wipe = document.querySelector(".page-wipe");
+
+            if (wipe && motionOK) gsap.set(wipe, { yPercent: 0, y: 0, pointerEvents: "none" });
+            else if (wipe) gsap.set(wipe, { yPercent: -100, pointerEvents: "none" });
+
+            function shouldWipeLink(link) {
+                if (!link || !link.hasAttribute("href")) return false;
+                const href = link.getAttribute("href");
+                if (!href || href === "#" || href.startsWith("#")) return false;
+                if (/^(mailto:|tel:|sms:|javascript:)/i.test(href)) return false;
+                if (link.target && link.target !== "_self") return false;
+                if (link.hasAttribute("download")) return false;
+                try {
+                    const url = new URL(href, window.location.href);
+                    if (url.hostname !== window.location.hostname) return false;
+                } catch { return false; }
+                return true;
+            }
+
+            if (wipe && motionOK) {
+                document.addEventListener("click", event => {
+                    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) return;
+                    const link = event.target.closest("a");
+                    if (!shouldWipeLink(link)) return;
+                    event.preventDefault();
+                    const dest = link.getAttribute("href");
+                    gsap.set(wipe, { yPercent: 100, y: 0 });
+                    if (window.lenis) window.lenis.stop();
+                    gsap.to(wipe, {
+                        yPercent: 0, duration: 0.8, ease: "expo.inOut",
+                        onComplete: () => { window.location.href = dest; }
+                    });
+                });
+
+                window.addEventListener("pageshow", e => {
+                    if (!e.persisted) return;
+                    if (window.lenis) window.lenis.start();
+                    gsap.set(wipe, { yPercent: 0, pointerEvents: "none" });
+                    gsap.to(wipe, { yPercent: -100, duration: 1.1, ease: "expo.inOut" });
+                });
+            }
+
+            /* ============================================================
+               STABLE TEXT SCRAMBLE — lifted from contactme.html
+               ============================================================ */
+            const scrambleCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+
+            function setupScramble(element) {
+                if (!element || element.dataset.scrambleReady === 'true') return;
+                const originalText = (element.dataset.value || element.textContent).trim();
+                if (!originalText) return;
+                element.dataset.scrambleReady = 'true';
+
+                if (!element.hasAttribute('aria-label')) {
+                    element.setAttribute('aria-label', originalText);
+                }
+
+                element.textContent = '';
+
+                const base = document.createElement('span');
+                base.className = 'scramble-base';
+                base.textContent = originalText;
+
+                const layer = document.createElement('span');
+                layer.className = 'scramble-layer';
+                layer.setAttribute('aria-hidden', 'true');
+
+                element.appendChild(base);
+                element.appendChild(layer);
+
+                let scrambleFrame = null;
+                let isScrambling = false;
+
+                function renderScramble(progress) {
+                    const resolved = Math.floor(progress * originalText.length);
+                    let result = '';
+                    for (let i = 0; i < originalText.length; i++) {
+                        const ch = originalText[i];
+                        if (ch === ' ') { result += ' '; continue; }
+                        if (i < resolved) { result += ch; continue; }
+                        result += scrambleCharacters[Math.floor(Math.random() * scrambleCharacters.length)];
+                    }
+                    layer.textContent = result;
+                }
+
+                function startScramble() {
+                    if (isScrambling) return;
+                    isScrambling = true;
+                    element.classList.add('is-scrambling');
+                    const startTime = performance.now();
+                    const duration = 480;
+
+                    function animate(now) {
+                        if (!isScrambling) return;
+                        const elapsed = now - startTime;
+                        const progress = Math.min(elapsed / duration, 1);
+                        const eased = 1 - Math.pow(1 - progress, 3);
+                        renderScramble(eased);
+                        if (progress < 1) {
+                            scrambleFrame = requestAnimationFrame(animate);
+                        } else {
+                            layer.textContent = originalText;
+                            scrambleFrame = null;
+                        }
+                    }
+                    scrambleFrame = requestAnimationFrame(animate);
+                }
+
+                function stopScramble() {
+                    isScrambling = false;
+                    if (scrambleFrame !== null) {
+                        cancelAnimationFrame(scrambleFrame);
+                        scrambleFrame = null;
+                    }
+                    element.classList.remove('is-scrambling');
+                    layer.textContent = originalText;
+                }
+
+                element.addEventListener('pointerenter', startScramble);
+                element.addEventListener('pointerleave', stopScramble);
+                element.addEventListener('focus', startScramble);
+                element.addEventListener('blur', stopScramble);
+            }
+
+            if (supportsHover && !prefersReducedMotion) {
+                document.querySelectorAll('.navigation a, .footer a').forEach(setupScramble);
+            }
+
+            /* ---------- MASTER INTRO ---------- */
+            if (motionOK) {
+                const masterTl = gsap.timeline();
+                if (wipe) {
+                    masterTl.to(wipe, { yPercent: -100, duration: 1.1, ease: "expo.inOut" }, 0);
+                }
+                masterTl
+                    .from(".navigation", { y: -32, opacity: 0, duration: 0.85, ease: "power3.out" }, 0.55)
+                    .from(".nav-year, .nav-main li, .nav-social li", {
+                        y: -14, opacity: 0, duration: 0.55, stagger: 0.05, ease: "power3.out"
+                    }, 0.72)
+                    .from(".footer", { y: 32, opacity: 0, duration: 0.85, ease: "power3.out" }, 0.6)
+                    .from(".footer-button, .footer_socials li, .footer-copy", {
+                        y: 14, opacity: 0, duration: 0.55, stagger: 0.05, ease: "power3.out"
+                    }, 0.8);
+
+                if (heroWords.length) {
+                    masterTl.to(heroWords, {
+                        yPercent: 0, skewY: 0, rotationZ: 0, duration: 1.25, ease: "power4.out", stagger: 0.04
+                    }, 0.7);
+                }
+            }
+
+            /* ---------- DIRECTORY REVEALS ---------- */
+            if (motionOK && hasScrollTrigger) {
+                gsap.from(".directory-label", {
+                    x: -20, opacity: 0, duration: 0.8, ease: "power2.out",
+                    scrollTrigger: { trigger: ".contact-directory", start: "top 92%", once: true }
+                });
+                gsap.from(".contact-item", {
+                    x: -30, opacity: 0, duration: 0.9, ease: "power3.out", stagger: 0.08,
+                    scrollTrigger: { trigger: ".contact-directory", start: "top 92%", once: true }
+                });
+
+                const dotPulse = gsap.timeline({ repeat: -1, delay: 1 });
+                dotPulse.fromTo(".status-dot::after",
+                    { scale: 0.6, opacity: 0.8 },
+                    { scale: 2, opacity: 0, duration: 2, ease: "power1.out" }
+                );
+
+                gsap.from(".status-dot", {
+                    scale: 0, duration: 0.6, ease: "back.out(2)", delay: 0.5,
+                    scrollTrigger: { trigger: ".contact-directory", start: "top 92%", once: true }
+                });
+            }
+
+            /* ---------- MAGNETIC BUTTON ---------- */
+            const workButton = document.querySelector(".work_button");
+            if (workButton && motionOK && supportsHover) {
+                const strength = 0.32;
+                const xTo = gsap.quickTo(workButton, "x", { duration: 0.45, ease: "power3" });
+                const yTo = gsap.quickTo(workButton, "y", { duration: 0.45, ease: "power3" });
+                workButton.addEventListener("pointermove", e => {
+                    const r = workButton.getBoundingClientRect();
+                    const relX = e.clientX - (r.left + r.width / 2);
+                    const relY = e.clientY - (r.top + r.height / 2);
+                    xTo(relX * strength);
+                    yTo(relY * strength);
+                });
+                workButton.addEventListener("pointerenter", () =>
+                    gsap.to(workButton, { scale: 1.04, duration: 0.35, ease: "power3.out" })
+                );
+                workButton.addEventListener("pointerleave", () => {
+                    xTo(0);
+                    yTo(0);
+                    gsap.to(workButton, { scale: 1, duration: 0.35, ease: "power3.out" });
+                });
+            }
+
+            /* ---------- BACK TO TOP ---------- */
+            const toTop = document.querySelector(".to-top");
+            if (toTop) {
+                const toggleToTop = () => {
+                    const y = window.scrollY || document.documentElement.scrollTop || 0;
+                    toTop.classList.toggle("is-visible", y > window.innerHeight * 0.5);
+                };
+                window.addEventListener("scroll", toggleToTop, { passive: true });
+                window.addEventListener("resize", toggleToTop);
+                toggleToTop();
+
+                toTop.addEventListener("click", () => {
+                    if (window.lenis) {
+                        window.lenis.scrollTo(0, { duration: 1.2 });
+                    } else {
+                        window.scrollTo({ top: 0, behavior: prefersReducedMotion ? "auto" : "smooth" });
+                    }
+                });
+            }
+
+            if (hasScrollTrigger) {
+                window.addEventListener("load", () => ScrollTrigger.refresh());
+                if (document.fonts && document.fonts.ready) {
+                    document.fonts.ready.then(() => ScrollTrigger.refresh());
+                }
+            }
+        });
+    </script>
+</body>
+</html>
